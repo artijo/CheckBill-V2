@@ -168,8 +168,9 @@ export default function Home() {
             </div>
           </div>
         )}
-        <Button variant="destructive" onClick={handleRemoveall} className="block">ล้างข้อมูล</Button>
+        <Button variant="destructive" onClick={handleRemoveall} className="mt-2">ล้างข้อมูล</Button>
       </div>
+      <p className="absolute right-0 bottom-0 text-center">&copy; CheckBill by artijo. Version: 0.5</p>
     </main>
   );
 }
