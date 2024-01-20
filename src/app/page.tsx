@@ -1,6 +1,12 @@
 "use client";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+
+
+
+
 
 export default function Home() {
   const [nameBecome, setNameBecome] = useState("");
@@ -12,27 +18,32 @@ export default function Home() {
   ]);
 
   const handlleAdd = () => {
-    setlistname([...listname, nameBecome]);
-    const inputElement: any = document.querySelector('input[name="person"]');
-    if (inputElement) {
-      inputElement.value = "";
-    }
-    // localStorage.setItem("listname", JSON.stringify(listname));
+    // setlistname([...listname, nameBecome]);
+    // const inputElement: any = document.querySelector('input[name="person"]');
+    // if (inputElement) {
+    //   inputElement.value = "";
+    // }
+    listname.push(nameBecome);
+    setNameBecome("");
+    localStorage.setItem("listname", JSON.stringify(listname));
   };
   const handlleAddProduct = () => {
     const selectedPs = Array.from(
       document.querySelectorAll('input[name="ps"]:checked')
     ).map((checkbox: any) => checkbox.value);
-    setListProduct([...listProduct, { product, price, ps: selectedPs }]);
-    const inputElement: any = document.querySelector('input[name="product"]');
-    if (inputElement) inputElement.value = "";
-    const inputElement2: any = document.querySelector('input[name="price"]');
-    if (inputElement2) inputElement2.value = "";
+    // setListProduct([...listProduct, { product, price, ps: selectedPs }]);
+    // const inputElement: any = document.querySelector('input[name="product"]');
+    // if (inputElement) inputElement.value = "";
+    // const inputElement2: any = document.querySelector('input[name="price"]');
+    // if (inputElement2) inputElement2.value = "";
     const inputElement3: any = document.querySelectorAll('input[name="ps"]');
     if (inputElement3) {
       inputElement3.forEach((checkbox: any) => (checkbox.checked = false));
     }
+    listProduct.push({ product, price, ps: selectedPs });
     localStorage.setItem("listProduct", JSON.stringify(listProduct));
+    setProduct("");
+    setPrice(0);
   };
 
   const handlleRemovlistname = (index: number) => {
@@ -49,15 +60,18 @@ export default function Home() {
   const handleRemoveall = () => {
     setlistname([]);
     setListProduct([]);
+    localStorage.removeItem("listname");
     localStorage.removeItem("listProduct");
   }
   useEffect(() => {
     const listpd = localStorage.getItem("listProduct");
+    const listname = localStorage.getItem("listname");
     if (listpd) {
       setListProduct(JSON.parse(listpd));
     }
-    console.log(listpd);
-    console.log(listProduct);
+    if (listname) {
+      setlistname(JSON.parse(listname));
+    }
   }, []);
   return (
     <main className="min-h-screen">
@@ -67,71 +81,79 @@ export default function Home() {
           รายชื่อคนที่มา
         </label>
         <br />
-        <input
+        <div className="flex w-full max-w-sm items-center space-x-2">
+        <Input
           type="text"
           name="person"
           placeholder="ป้อนชื่อ"
+          value={nameBecome}
           onChange={(e) => setNameBecome(e.target.value)}
         />
-        <button onClick={handlleAdd}>เพิ่ม</button>
+        <Button variant="outline" onClick={handlleAdd}>เพิ่ม</Button>
+        </div>
         {listname.length > 0 && (
           <div>
             <label htmlFor="product" className="">
               รายการ
             </label>
             <br />
-            <input
+            <Input
               type="text"
               name="product"
               placeholder="ป้อนชื่อรายการ"
+              value={product}
               onChange={(e) => setProduct(e.target.value)}
             />
-            <br />
             <label htmlFor="price" className="">
               ราคา
             </label>
             <br />
-            <input
+            <Input
               type="number"
               name="price"
               placeholder="ป้อนราคา"
+              value={price}
               onChange={(e) => setPrice(parseFloat(e.target.value))}
             />
-            <br />
             <label htmlFor="ps" className="">
               คนที่ต้องจ่าย
             </label>
-            <br />
               {listname.map((name, index) => (
                 <div key={index} className="flex justify-between">
                   <div>
-                    <input type="checkbox" name="ps" value={name} />
+                    <input className="pr-2" type="checkbox" name="ps" value={name} />
                     {name}
                   </div>
-                  <button onClick={() => handlleRemovlistname(index)}>ลบ</button>
+                  {/* <Button variant="destructive" onClick={() => handlleRemovlistname(index)}>ลบ</Button> */}
                 </div>
               ))}
         
-            <button onClick={handlleAddProduct}>เพิ่ม</button>
+            <Button variant="outline" onClick={handlleAddProduct}>เพิ่ม</Button>
           </div>
         )}
-        {listProduct.length > 1 && (
+        {listProduct.length > 0 && (
           <div>
-            <h2>สรุปรายการ</h2>
+            <h2 className="text-center">สรุปรายการ</h2>
+            <div className="flex justify-between">
+              <h3>รายการ</h3>
+              <h3 className="">จ่ายคนละ</h3>
+            </div>
             <div>
               {listProduct.map(
                 (product: any, index: number) =>
-                  index > 0 && ( // Exclude index 0
+                   ( // Exclude index 0
                     <div key={index} className="flex justify-between">
-                      {product.product} {product.price} บาท
-                      <div>
+                      <div className="">
+                      {product.product} {product.price} บาท <br />
                         {product.ps.map((name: string, psIndex: number) => (
-                          <div key={psIndex}>{name}</div>
+                          <span key={psIndex} className="-mt-2 pr-2 text-slate-400">{name}</span>
                         ))}
+                        </div>
+                      <div>
                         {product.price / product.ps.length} บาท
-                      <button onClick={() => handlleRemoveProduct(index)}>
+                      {/* <Button variant="destructive" className="ml-2" onClick={() => handlleRemoveProduct(index)}>
                         ลบ
-                      </button>
+                      </Button> */}
                       </div>
                     </div>
                   )
@@ -139,7 +161,7 @@ export default function Home() {
             </div>
           </div>
         )}
-        <button onClick={handleRemoveall} className="text-right">ล้างข้อมูล</button>
+        <Button variant="destructive" onClick={handleRemoveall} className="block">ล้างข้อมูล</Button>
       </div>
     </main>
   );
