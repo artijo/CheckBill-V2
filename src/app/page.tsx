@@ -157,7 +157,7 @@ export default function Home() {
                         ))}
                         </div>
                       <div>
-                        {(product.price / product.ps.length).toLocaleString()} บาท
+                        {(product.price / product.ps.length).toLocaleString(undefined, { maximumFractionDigits: 2 })} บาท
                       {/* <Button variant="destructive" className="ml-2" onClick={() => handlleRemoveProduct(index)}>
                         ลบ
                       </Button> */}
