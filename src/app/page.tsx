@@ -129,21 +129,20 @@ export default function Home() {
               required
               onChange={(e) => setPrice(parseFloat(e.target.value))}
             />
+            <div className="space-y-3"></div>
             <label htmlFor="ps" className="">
               คนที่ต้องจ่าย
             </label>
             {listname.map((name, index) => (
-              <div key={index} className="flex justify-between">
-                <div>
+              <div key={index} className="inline">
                   <input
-                    className="pr-2"
+                    className="ml-2 w-4 h-4"
                     type="checkbox"
                     name="ps"
                     value={name}
                     required
                   />
-                  {name}
-                </div>
+                  <label htmlFor="ps">{name}</label>
                 {/* <Button variant="destructive" onClick={() => handlleRemovlistname(index)}>ลบ</Button> */}
               </div>
             ))}
