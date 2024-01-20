@@ -12,7 +12,7 @@ export default function Home() {
   const [nameBecome, setNameBecome] = useState("");
   const [listname, setlistname] = useState<string[]>([]);
   const [product, setProduct] = useState<string>("");
-  const [price, setPrice] = useState<number>(0);
+  const [price, setPrice] = useState<number>(1);
   const [listProduct, setListProduct] = useState<any>([
     { product, price, ps: [] },
   ]);
@@ -23,6 +23,7 @@ export default function Home() {
     // if (inputElement) {
     //   inputElement.value = "";
     // }
+    if(nameBecome === "") return;
     listname.push(nameBecome);
     setNameBecome("");
     localStorage.setItem("listname", JSON.stringify(listname));
@@ -40,6 +41,8 @@ export default function Home() {
     if (inputElement3) {
       inputElement3.forEach((checkbox: any) => (checkbox.checked = false));
     }
+    if(product === "" || price === 0) return;
+    if(selectedPs.length === 0) return;
     listProduct.push({ product, price, ps: selectedPs });
     localStorage.setItem("listProduct", JSON.stringify(listProduct));
     setProduct("");
@@ -87,6 +90,7 @@ export default function Home() {
           name="person"
           placeholder="ป้อนชื่อ"
           value={nameBecome}
+          required
           onChange={(e) => setNameBecome(e.target.value)}
         />
         <Button variant="outline" onClick={handlleAdd}>เพิ่ม</Button>
@@ -102,6 +106,7 @@ export default function Home() {
               name="product"
               placeholder="ป้อนชื่อรายการ"
               value={product}
+              required
               onChange={(e) => setProduct(e.target.value)}
             />
             <label htmlFor="price" className="">
@@ -113,6 +118,8 @@ export default function Home() {
               name="price"
               placeholder="ป้อนราคา"
               value={price}
+              min={1}
+              required
               onChange={(e) => setPrice(parseFloat(e.target.value))}
             />
             <label htmlFor="ps" className="">
@@ -121,7 +128,7 @@ export default function Home() {
               {listname.map((name, index) => (
                 <div key={index} className="flex justify-between">
                   <div>
-                    <input className="pr-2" type="checkbox" name="ps" value={name} />
+                    <input className="pr-2" type="checkbox" name="ps" value={name} required/>
                     {name}
                   </div>
                   {/* <Button variant="destructive" onClick={() => handlleRemovlistname(index)}>ลบ</Button> */}
