@@ -14,7 +14,7 @@ export default function Home() {
   const [product, setProduct] = useState<string>("");
   const [price, setPrice] = useState<number>(1);
   const [listProduct, setListProduct] = useState<any>([
-    { product, price, ps: [] },
+    
   ]);
 
   const handlleAdd = () => {
