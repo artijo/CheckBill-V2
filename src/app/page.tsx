@@ -1,21 +1,16 @@
 "use client";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-
-
-
-
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export default function Home() {
   const [nameBecome, setNameBecome] = useState("");
   const [listname, setlistname] = useState<string[]>([]);
   const [product, setProduct] = useState<string>("");
   const [price, setPrice] = useState<number>(1);
-  const [listProduct, setListProduct] = useState<any>([
-    
-  ]);
+  const [listProduct, setListProduct] = useState<any>([]);
+  const [totalpay, setTotalpay] = useState<any>([]);
 
   const handlleAdd = () => {
     // setlistname([...listname, nameBecome]);
@@ -23,7 +18,7 @@ export default function Home() {
     // if (inputElement) {
     //   inputElement.value = "";
     // }
-    if(nameBecome === "") return;
+    if (nameBecome === "") return;
     listname.push(nameBecome);
     setNameBecome("");
     localStorage.setItem("listname", JSON.stringify(listname));
@@ -41,8 +36,8 @@ export default function Home() {
     if (inputElement3) {
       inputElement3.forEach((checkbox: any) => (checkbox.checked = false));
     }
-    if(product === "" || price === 0) return;
-    if(selectedPs.length === 0) return;
+    if (product === "" || price === 0) return;
+    if (selectedPs.length === 0) return;
     listProduct.push({ product, price, ps: selectedPs });
     localStorage.setItem("listProduct", JSON.stringify(listProduct));
     setProduct("");
@@ -65,7 +60,17 @@ export default function Home() {
     setListProduct([]);
     localStorage.removeItem("listname");
     localStorage.removeItem("listProduct");
-  }
+  };
+
+  // const handleTotalpay = () => {
+  //   listProduct.map((product: any, index: number) => {
+  //     product.ps.map((name: string, psIndex: number) => {
+  //       totalpay.push({name, price: product.price / product.ps.length})
+  //     })
+  //   })
+  //   console.log(totalpay);
+  // }
+
   useEffect(() => {
     const listpd = localStorage.getItem("listProduct");
     const listname = localStorage.getItem("listname");
@@ -77,7 +82,7 @@ export default function Home() {
     }
   }, []);
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen relative">
       <div className="w-80 bg-white mx-auto p-4">
         <h1 className="text-center">CheckBill</h1>
         <label htmlFor="name" className="">
@@ -85,15 +90,17 @@ export default function Home() {
         </label>
         <br />
         <div className="flex w-full max-w-sm items-center space-x-2">
-        <Input
-          type="text"
-          name="person"
-          placeholder="ป้อนชื่อ"
-          value={nameBecome}
-          required
-          onChange={(e) => setNameBecome(e.target.value)}
-        />
-        <Button variant="outline" onClick={handlleAdd}>เพิ่ม</Button>
+          <Input
+            type="text"
+            name="person"
+            placeholder="ป้อนชื่อ"
+            value={nameBecome}
+            required
+            onChange={(e) => setNameBecome(e.target.value)}
+          />
+          <Button variant="outline" onClick={handlleAdd}>
+            เพิ่ม
+          </Button>
         </div>
         {listname.length > 0 && (
           <div>
@@ -125,17 +132,25 @@ export default function Home() {
             <label htmlFor="ps" className="">
               คนที่ต้องจ่าย
             </label>
-              {listname.map((name, index) => (
-                <div key={index} className="flex justify-between">
-                  <div>
-                    <input className="pr-2" type="checkbox" name="ps" value={name} required/>
-                    {name}
-                  </div>
-                  {/* <Button variant="destructive" onClick={() => handlleRemovlistname(index)}>ลบ</Button> */}
+            {listname.map((name, index) => (
+              <div key={index} className="flex justify-between">
+                <div>
+                  <input
+                    className="pr-2"
+                    type="checkbox"
+                    name="ps"
+                    value={name}
+                    required
+                  />
+                  {name}
                 </div>
-              ))}
-        
-            <Button variant="outline" onClick={handlleAddProduct}>เพิ่ม</Button>
+                {/* <Button variant="destructive" onClick={() => handlleRemovlistname(index)}>ลบ</Button> */}
+              </div>
+            ))}
+
+            <Button variant="outline" onClick={handlleAddProduct}>
+              เพิ่ม
+            </Button>
           </div>
         )}
         {listProduct.length > 0 && (
@@ -147,30 +162,76 @@ export default function Home() {
             </div>
             <div>
               {listProduct.map(
-                (product: any, index: number) =>
-                   ( // Exclude index 0
-                    <div key={index} className="flex justify-between">
-                      <div className="">
-                      {product.product} {(product.price).toLocaleString()} บาท <br />
-                        {product.ps.map((name: string, psIndex: number) => (
-                          <span key={psIndex} className="-mt-2 pr-2 text-slate-400">{name}</span>
-                        ))}
-                        </div>
-                      <div>
-                        {(product.price / product.ps.length).toLocaleString(undefined, { maximumFractionDigits: 2 })} บาท
+                (
+                  product: any,
+                  index: number // Exclude index 0
+                ) => (
+                  <div key={index} className="flex justify-between">
+                    <div className="">
+                      {product.product} {product.price.toLocaleString()} บาท{" "}
+                      <br />
+                      {product.ps.map((name: string, psIndex: number) => (
+                        <span
+                          key={psIndex}
+                          className="-mt-2 pr-2 text-slate-400"
+                        >
+                          {name}
+                        </span>
+                      ))}
+                    </div>
+                    <div>
+                      {(product.price / product.ps.length).toLocaleString(
+                        undefined,
+                        { maximumFractionDigits: 2 }
+                      )}{" "}
+                      บาท
                       {/* <Button variant="destructive" className="ml-2" onClick={() => handlleRemoveProduct(index)}>
                         ลบ
                       </Button> */}
-                      </div>
                     </div>
-                  )
+                  </div>
+                )
               )}
+            </div>
+            <h3>สรุปยอดจ่ายรายคน</h3>
+            <div>
+              {listname.map((name: string, nameIndex: number) => {
+                const totalAmount = listProduct.reduce(
+                  (sum: number, product: any) => {
+                    if (product.ps.includes(name)) {
+                      return sum + product.price / product.ps.length;
+                    }
+                    return sum;
+                  },
+                  0
+                );
+
+                return (
+                  <div key={nameIndex} className="flex justify-between">
+                    <div>{name}</div>
+                    <div>
+                      {totalAmount.toLocaleString(undefined, {
+                        maximumFractionDigits: 2,
+                      })}{" "}
+                      บาท
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
-        <Button variant="destructive" onClick={handleRemoveall} className="mt-2">ล้างข้อมูล</Button>
+        <Button
+          variant="destructive"
+          onClick={handleRemoveall}
+          className="mt-2"
+        >
+          ล้างข้อมูล
+        </Button>
       </div>
-      <p className="absolute right-0 bottom-0 text-center">&copy; CheckBill by artijo. Version: 0.5</p>
+      <p className="absolute right-0 bottom-0 text-center">
+        &copy; CheckBill by artijo. Version: 0.5
+      </p>
     </main>
   );
 }
