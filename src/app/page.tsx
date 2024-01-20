@@ -151,13 +151,13 @@ export default function Home() {
                    ( // Exclude index 0
                     <div key={index} className="flex justify-between">
                       <div className="">
-                      {product.product} {product.price} บาท <br />
+                      {product.product} {(product.price).toLocaleString()} บาท <br />
                         {product.ps.map((name: string, psIndex: number) => (
                           <span key={psIndex} className="-mt-2 pr-2 text-slate-400">{name}</span>
                         ))}
                         </div>
                       <div>
-                        {product.price / product.ps.length} บาท
+                        {(product.price / product.ps.length).toLocaleString()} บาท
                       {/* <Button variant="destructive" className="ml-2" onClick={() => handlleRemoveProduct(index)}>
                         ลบ
                       </Button> */}
