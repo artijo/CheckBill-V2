@@ -63,6 +63,10 @@ export default function Home() {
     setListProduct(newListProduct);
     localStorage.setItem("listProduct", JSON.stringify(newListProduct));
   };
+  const handleQR = () => {
+    if(phoneNumber === "") return;
+    setqrCode(generatePayload(phoneNumber, { amount }));
+  }
   const handleRemoveall = () => {
     setlistname([]);
     setListProduct([]);
@@ -246,7 +250,7 @@ export default function Home() {
               required
               onChange={(e) => setAmount(parseFloat(e.target.value))}
             />
-            <Button className="mt-2" onClick={() => setqrCode(generatePayload(phoneNumber, { amount }))}>
+            <Button className="mt-2" onClick={handleQR}>
               สร้าง QR
             </Button>
             {qrCode !== "sample" && (
