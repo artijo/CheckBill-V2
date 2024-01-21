@@ -1,10 +1,13 @@
 "use client";
 import Image from "next/image";
+import QRCode from 'qrcode.react';
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator"
 import { Label } from "@/components/ui/label"
+
+const generatePayload = require('promptpay-qr');
 
 
 export default function Home() {
@@ -13,7 +16,9 @@ export default function Home() {
   const [product, setProduct] = useState<string>("");
   const [price, setPrice] = useState<number>(1);
   const [listProduct, setListProduct] = useState<any>([]);
-  const [totalpay, setTotalpay] = useState<any>([]);
+  const [ phoneNumber, setPhoneNumber ] = useState("");
+  const [ amount, setAmount ] = useState(0);         
+  const [ qrCode ,setqrCode ] = useState("sample");
 
   const handlleAdd = () => {
     // setlistname([...listname, nameBecome]);
@@ -61,18 +66,11 @@ export default function Home() {
   const handleRemoveall = () => {
     setlistname([]);
     setListProduct([]);
+    setPhoneNumber("");
+    setqrCode("sample");
     localStorage.removeItem("listname");
     localStorage.removeItem("listProduct");
   };
-
-  // const handleTotalpay = () => {
-  //   listProduct.map((product: any, index: number) => {
-  //     product.ps.map((name: string, psIndex: number) => {
-  //       totalpay.push({name, price: product.price / product.ps.length})
-  //     })
-  //   })
-  //   console.log(totalpay);
-  // }
 
   useEffect(() => {
     const listpd = localStorage.getItem("listProduct");
@@ -225,18 +223,53 @@ export default function Home() {
                 );
               })}
             </div>
+            <Separator className="my-4" />
+            <div>
+            <h3>รับเงินผ่าน QR promptpay (สำหรับผู้รับ)</h3>
+            <Label htmlFor="phone" className="text-base">หมายเลขพร้อมเพย์</Label>
+            <Input
+              type="text"
+              name="phone"
+              placeholder="ป้อนหมายเลขพร้อมเพย์"
+              id="phone"
+              value={phoneNumber}
+              required
+              onChange={(e) => setPhoneNumber(e.target.value)}
+            />
+            <Label htmlFor="amount" className="text-base">จำนวนเงิน(ไม่ใส่ก็ได้)</Label>
+            <Input
+              type="number"
+              name="amount"
+              placeholder="ป้อนจำนวนเงิน"
+              id="amount"
+              min={0}
+              required
+              onChange={(e) => setAmount(parseFloat(e.target.value))}
+            />
+            <Button className="mt-2" onClick={() => setqrCode(generatePayload(phoneNumber, { amount }))}>
+              สร้าง QR
+            </Button>
+            {qrCode !== "sample" && (
+            <div className="mt-2 flex justify-center">
+              <QRCode value={qrCode} />
+            </div>
+              )}
+            </div>
           </div>
         )}
+        {listname.length !== 0 && (
+          
         <Button
           variant="destructive"
           onClick={handleRemoveall}
-          className="mt-2"
+          className="mt-2 block ml-auto"
         >
           ล้างข้อมูล
         </Button>
+        )}
       </div>
       <p className="absolute right-0 bottom-0 text-center">
-        &copy; CheckBill by artijo. Version: 0.5
+        &copy; CheckBill by <a href="https://artijo.com" target="_blank">artijo.</a> Version: 0.5
       </p>
     </main>
   );
