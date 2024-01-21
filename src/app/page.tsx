@@ -3,6 +3,9 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator"
+import { Label } from "@/components/ui/label"
+
 
 export default function Home() {
   const [nameBecome, setNameBecome] = useState("");
@@ -83,71 +86,76 @@ export default function Home() {
   }, []);
   return (
     <main className="min-h-screen relative">
-      <div className="w-80 bg-white mx-auto p-4">
+      <div className="w-96 bg-white mx-auto p-4">
         <h1 className="text-center">CheckBill</h1>
-        <label htmlFor="name" className="">
+        <Label htmlFor="name" className="text-base">
           รายชื่อคนที่มา
-        </label>
+        </Label>
         <br />
         <div className="flex w-full max-w-sm items-center space-x-2">
           <Input
             type="text"
             name="person"
+            id="name"
             placeholder="ป้อนชื่อ"
             value={nameBecome}
             required
             onChange={(e) => setNameBecome(e.target.value)}
           />
-          <Button variant="outline" onClick={handlleAdd}>
+          <Button onClick={handlleAdd}>
             เพิ่ม
           </Button>
         </div>
+        <Separator className="my-4" />
         {listname.length > 0 && (
           <div>
-            <label htmlFor="product" className="">
+            <Label htmlFor="product" className="text-base">
               รายการ
-            </label>
+            </Label>
             <br />
             <Input
               type="text"
               name="product"
               placeholder="ป้อนชื่อรายการ"
+              id="product"
               value={product}
               required
               onChange={(e) => setProduct(e.target.value)}
             />
-            <label htmlFor="price" className="">
+            <Label htmlFor="price" className="text-base">
               ราคา
-            </label>
+            </Label>
             <br />
             <Input
               type="number"
               name="price"
               placeholder="ป้อนราคา"
+              id="price"
               value={price}
               min={1}
               required
               onChange={(e) => setPrice(parseFloat(e.target.value))}
             />
-            <div className="space-y-3"></div>
-            <label htmlFor="ps" className="">
+            <div className="mt-2">
+            <Label htmlFor="ps" className="text-base">
               คนที่ต้องจ่าย
-            </label>
+            </Label>
             {listname.map((name, index) => (
               <div key={index} className="inline">
                   <input
                     className="ml-2 w-4 h-4"
                     type="checkbox"
                     name="ps"
+                    id={name}
                     value={name}
                     required
                   />
-                  <label htmlFor="ps">{name}</label>
+                  <Label htmlFor={name} className="ml-1">{name}</Label>
                 {/* <Button variant="destructive" onClick={() => handlleRemovlistname(index)}>ลบ</Button> */}
               </div>
             ))}
-
-            <Button variant="outline" onClick={handlleAddProduct}>
+            </div>
+            <Button onClick={handlleAddProduct}>
               เพิ่ม
             </Button>
           </div>
