@@ -200,7 +200,16 @@ export default function Home() {
                   </div>
                 )
               )}
+              <span className="mr-1 font-bold">รวม</span>
+              <span>
+                {listProduct.reduce(
+                  (sum: number, product: any) => sum + product.price,
+                  0
+                ).toLocaleString(undefined, { maximumFractionDigits: 2 })}{" "}
+                บาท
+              </span>
             </div>
+            <Separator className="my-4" />
             <h3>สรุปยอดจ่ายรายคน</h3>
             <div>
               {listname.map((name: string, nameIndex: number) => {
@@ -265,10 +274,14 @@ export default function Home() {
           
         <Button
           variant="destructive"
-          onClick={handleRemoveall}
+          onClick={()=>{
+            if(confirm("ต้องการล้างข้อมูลทั้งหมดใช่หรือไม่")){
+              handleRemoveall();
+            }
+          }}
           className="mt-2 block ml-auto"
         >
-          ล้างข้อมูล
+          ล้างข้อมูลทั้งหมด
         </Button>
         )}
       </div>
