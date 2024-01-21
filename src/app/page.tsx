@@ -33,13 +33,13 @@ export default function Home() {
     // setListProduct([...listProduct, { product, price, ps: selectedPs }]);
     // const inputElement: any = document.querySelector('input[name="product"]');
     // if (inputElement) inputElement.value = "";
-    // const inputElement2: any = document.querySelector('input[name="price"]');
-    // if (inputElement2) inputElement2.value = "";
+    const inputElement2: any = document.querySelector('input[name="price"]');
+    if (inputElement2) inputElement2.value = "";
     const inputElement3: any = document.querySelectorAll('input[name="ps"]');
     if (inputElement3) {
       inputElement3.forEach((checkbox: any) => (checkbox.checked = false));
     }
-    if (product === "" || price === 0) return;
+    if (product === "" || price === 0 || Number.isNaN(price)) return;
     if (selectedPs.length === 0) return;
     listProduct.push({ product, price, ps: selectedPs });
     localStorage.setItem("listProduct", JSON.stringify(listProduct));
@@ -131,7 +131,6 @@ export default function Home() {
               name="price"
               placeholder="ป้อนราคา"
               id="price"
-              value={price}
               min={1}
               required
               onChange={(e) => setPrice(parseFloat(e.target.value))}
