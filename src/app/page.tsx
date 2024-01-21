@@ -177,7 +177,7 @@ export default function Home() {
                       {product.ps.map((name: string, psIndex: number) => (
                         <span
                           key={psIndex}
-                          className="-mt-2 pr-2 text-slate-400"
+                          className="-mt-2 pr-2 text-slate-400 text-sm"
                         >
                           {name}
                         </span>
